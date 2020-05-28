@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Tes BCLog</title>
+</head>
+
+<body>
+    <div class="card text-center">
+        <div class="card-header" style="background-color: burlywood;">
+            <h5>Phonebook Apps</h5>
+        </div>
+        <h6>-Filter-</h6>
+    </div>
+    <div class="card">
+        <div class="container">
+            <form id="search">
+                <input type="hidden" id="page" name="page" value="">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <input class="form-check-input" type="checkbox" name="check_name"> Name
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="searchName" id="searchName" placeholder="String"
+                            value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <input class="form-check-input" type="checkbox" name="check_addres"> Addres
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Input Addres" id="searchAddres"
+                            name="searchAddres" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">
+                        <input class="form-check-input" type="checkbox" name="check_number">Phone Number
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="searchNumber" placeholder="Input Number"
+                            name="searchNumber" value="">
+                    </div>
+                </div>
+                <div class="container">
+                    <button type="submit" class="btn btn-primary btn-search">Search</button>
+                    <a href="/" class="btn btn-danger">Reset</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#modalAdd">Add</button>
+                </div>
+            </form>
+        </div>
+        <table class="table table-striped container" id="mytable">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Addres</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach((item, index) => {%>
+                <tr>
+                    <th scope="row"><%= item.id %></th>
+                    <td><%= item.name %></td>
+                    <td><%= item.addres %></td>
+                    <td><a href="https://api.whatsapp.com/send?phone=<%= item.number%>"><%= item.number %></a></td>
+                    <td>
+                        <a href="/edit" class="btn btn-sm btn-info edit" data-toggle="modal" data-target="#modalEdit"
+                            data-id="<%= item.id %>" data-name="<%= item.name %>" data-addres="<%= item.addres %>"
+                            data-number="<%= item.number %>">Edit</a>
+                        <button type="button" class="btn btn-sm btn-danger delete" data-toggle="modal"
+                            data-delete="<%= item.id %>" data-target="#modalDelete">Delete</button>
+                    </td>
+                </tr>
+                <%})%>
+            </tbody>
+        </table>
+
+        <nav aria-label="navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <%= page == 1 ? 'disabled' : ''; %>">
+                    <a class="page-link" href="/?page=<%= parseInt(page) - 1 %>">Previous</a>
+                </li>
+                <% for (let i = 1; i <= pages; i++) { %>
+                <li class="page-item <%= page == i ? 'active' : ''; %>"></li>
+                <a class="page-link" href="/?page=<%= i %>"><%= i %></a></li>
+                <%};%>
+
+                <li class="page-item <%= page == pages ? 'disabled' : ''; %>">
+                    <a class="page-link" href="/?page=<%= parseInt(page) + 1 %>">Next</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- modal add -->
+        <div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="modalAdd2"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAdd2">Add Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body container">
+                        <form method="POST" id="form-add">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="name" id="addName"
+                                        placeholder="Input Your Name">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Addres</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="addres" id="addAddres"
+                                        placeholder="Input your addres">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Phone Number</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="number" id="addnumber"
+                                        placeholder="62">
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="form-group row">
+                                    <div class="col-sm-8">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <a href="/" type="submit" class="btn btn-danger" data-dismiss="modal">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal edit -->
+        <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/edit" method="post">
+                            <div class="form-group row">
+                                <label for="id" class="col-sm-3 col-form-label">ID</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="id" name="id" class="form-control id" required disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control name" id="name" name="name" placeholder=""
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Addres</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control addres" id="addres" name="addres"
+                                        placeholder="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Phone Number</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control number" id="number" name="number"
+                                        placeholder="" value="">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="container">
+                        <div class="form-group row">
+                            <div class="col-sm-7">
+                                <input type="hidden" id="id" name="id" class="form-control id" required>
+                                <button type="submit" class="btn btn-primary">Edit</button>
+                                <a href="/" type="submit" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Delete-->
+        <form id="add-row-form" action="/hapus" method="post">
+            <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="myModalLabel">Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <strong>Anda yakin mau menghapus data ini?</strong>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="id" name="id" class="form-control id2" required>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </form>
+    </div>
+    </div>
+    </div>
+    <footer>
+        <div class="card-footer text-center">
+            <small class="text-muted">Created By <a
+                    href="https://www.linkedin.com/in/eko-prasetyo-753565bb/">@abushanum</a></small>
+        </div>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            //tampilkan data ke modal untuk edit
+            $('#mytable').on('click', '.edit', function () {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                var addres = $(this).data('addres');
+                var number = $(this).data('number');
+                $('#modalEdit').modal('show');
+                $('.id').val(id);
+                $('.name').val(name);
+                $('.addres').val(addres);
+                $('.number').val(number);
+            });
+            // tampilkan modal hapus record
+            $('#mytable').on('click', '.delete', function () {
+                var deleteData = $(this).data('delete');
+                $('#modalDelete').modal('show');
+                $('.id2').val(deleteData);
+            });
+        });
+    </script>
+</body>
+
+</html>
